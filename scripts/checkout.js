@@ -1,6 +1,7 @@
 import { cart, removeFromCart} from "../data/cart.js";
 import { products } from "../data/products.js";
-import { formatCurrency } from "./utils/money.js";
+import { formatCurrency } from "./utils/money.js";   //named export
+import  dayjs  from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js'      // default export  External Libraries    dayjs() 
 
 let cartSummaryHTML = "";
 let paymentSummaryHTML = "";
@@ -10,7 +11,10 @@ let price = 0;
 let cartQuantity = 0;
 let shippingFee = 0;
 
-hello();
+// hello();    //external link
+const todayDate = dayjs();     //external link
+const deliveryDate = todayDate.add(7,'days');    //add 7 days to today date
+console.log(deliveryDate.format('dddd, MMMM D'));
 
 cart.forEach((cartItem) => {
   let matchingProduct;
