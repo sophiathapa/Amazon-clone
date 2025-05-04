@@ -2,7 +2,7 @@ import { products } from "./products.js";
 
 export let cart = JSON.parse(localStorage.getItem("cart"));
 // if (!cart) {
-//   
+//
 // }
 
 function saveToStorage() {
@@ -38,3 +38,5 @@ export function removeFromCart(productId) {
   cart = newCart;
   saveToStorage();
 }
+
+

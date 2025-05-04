@@ -1,4 +1,4 @@
-import { cart, removeFromCart } from "../data/cart.js";
+import { cart, removeFromCart} from "../data/cart.js";
 import { products } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
 
@@ -9,6 +9,8 @@ let CostBeforeTax = 0;
 let price = 0;
 let cartQuantity = 0;
 let shippingFee = 0;
+
+hello();
 
 cart.forEach((cartItem) => {
   let matchingProduct;
@@ -148,6 +150,9 @@ cart.forEach((cartItem) => {
 
 document.querySelector(".order-summary").innerHTML = cartSummaryHTML;
 document.querySelector(".payment-summary").innerHTML = paymentSummaryHTML;
+document.querySelector(".js-checkout").innerHTML = `${cartQuantity} items`;
+
+
 
 document.querySelectorAll(".js-delete-button").forEach((deleteButton) => {
   deleteButton.addEventListener("click", () => {
@@ -157,3 +162,14 @@ document.querySelectorAll(".js-delete-button").forEach((deleteButton) => {
     container.remove();
   });
 });
+
+document.querySelectorAll('.js-update-button').forEach((updateButton)=>{
+  updateButton.addEventListener("click", ()=> {
+    updateButton.innerHTML = `
+    <input class="js-new-quantity-input new-quantity-input" type="number" value="1" data-testid="new-quantity-input">
+    <span class="js-save-quantity-link save-quantity-link link-primary" data-testid="save-quantity-link">
+                  Save
+                </span>
+    `;
+  })
+})
