@@ -1,8 +1,8 @@
-import { cart, removeFromCart} from "../data/cart.js";
+import { cart, removeFromCart } from "../data/cart.js";
 import { products } from "../data/products.js";
 import { deliveryOptions } from "../data/deliveryOption.js";
-import { formatCurrency } from "./utils/money.js";   //named export
-import  dayjs  from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js'      // default export  External Libraries    dayjs() 
+import { formatCurrency } from "./utils/money.js"; //named export
+import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js"; // default export  External Libraries    dayjs()
 
 let cartSummaryHTML = "";
 let paymentSummaryHTML = "";
@@ -35,11 +35,23 @@ cart.forEach((cartItem) => {
   const tax = priceBeforeTax * 0.1;
   const priceAfterTax = priceBeforeTax + tax;
 
+  const deliveryOptionId = cartItem.deliveryOptionId;
+  let deliveryOption ;
+
+  deliveryOptions.forEach((option)=>{
+         if (option.id === deliveryOptionId)
+          deliveryOption = option;
+  });
+
+  const today = dayjs();
+  const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
+  const dateString = deliveryDate.format("dddd, MMMM D");
+
   cartSummaryHTML += `
        <div class="cart-item-container
        js-cart-item-container-${matchingProduct.id}">
             <div class="delivery-date">
-              Delivery date: Tuesday, June 21
+              ${dateString}
             </div>
 
             <div class="cart-item-details-grid">
@@ -74,7 +86,7 @@ cart.forEach((cartItem) => {
                   Choose a delivery option:
                 </div>
                 
-                 ${deliveryOptionsHTML(matchingProduct)}
+                 ${deliveryOptionsHTML(matchingProduct,cartItem)}
               </div>
             </div>
           </div>
@@ -116,16 +128,24 @@ cart.forEach((cartItem) => {
           `;
 });
 
-function deliveryOptionsHTML (matchingProduct){
-  let html = '';
-  deliveryOptions.forEach((deliveryOption) =>{
+function deliveryOptionsHTML(matchingProduct,cartItem) {
+  let html = "";
+
+  deliveryOptions.forEach((deliveryOption) => {
     const today = dayjs();
-    const deliveryDate = today.add(deliveryOption.deliveryDays,'days');
-    const dateString = deliveryDate.format('dddd, MMMM D');
-    const priceString = deliveryOption.priceCents === 0 ? 'FREE': `$${formatCurrency(deliveryOption.priceCents)}-`
-    html +=  `
+    const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
+    const dateString = deliveryDate.format("dddd, MMMM D");
+    const priceString =
+      deliveryOption.priceCents === 0
+        ? "FREE"
+        : `$${formatCurrency(deliveryOption.priceCents)}-`;
+
+    const isChecked = deliveryOption.id === 
+    cartItem.deliveryOptionId ;     
+    html += `
     <div class="delivery-option">
                   <input type="radio"
+                  ${isChecked ? 'checked': '' }
                     class="delivery-option-input"
                     name="delivery-option-${matchingProduct.id}">
                   <div>
@@ -136,34 +156,35 @@ function deliveryOptionsHTML (matchingProduct){
                       ${priceString} Shipping
                     </div>
                   </div>
-                </div>`
-  }
-)
-  return html ;
+                </div>`;
+  });
+ 
+  return html;
+
 }
 
 document.querySelector(".order-summary").innerHTML = cartSummaryHTML;
 document.querySelector(".payment-summary").innerHTML = paymentSummaryHTML;
 document.querySelector(".js-checkout").innerHTML = `${cartQuantity} items`;
 
-
-
 document.querySelectorAll(".js-delete-button").forEach((deleteButton) => {
   deleteButton.addEventListener("click", () => {
     const productId = deleteButton.dataset.productId;
     removeFromCart(productId);
-    const container = document.querySelector(`.js-cart-item-container-${productId}`);
+    const container = document.querySelector(
+      `.js-cart-item-container-${productId}`
+    );
     container.remove();
   });
 });
 
-document.querySelectorAll('.js-update-button').forEach((updateButton)=>{
-  updateButton.addEventListener("click", ()=> {
+document.querySelectorAll(".js-update-button").forEach((updateButton) => {
+  updateButton.addEventListener("click", () => {
     updateButton.innerHTML = `
     <input class="js-new-quantity-input new-quantity-input" type="number" value="1" data-testid="new-quantity-input">
     <span class="js-save-quantity-link save-quantity-link link-primary" data-testid="save-quantity-link">
                   Save
                 </span>
     `;
-  })
-})
+  });
+});
