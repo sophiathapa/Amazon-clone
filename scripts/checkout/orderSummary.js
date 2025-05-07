@@ -1,6 +1,10 @@
 import { cart, removeFromCart, updateDeliveryOption } from "../../data/cart.js";
-import { products,getProduct } from "../../data/products.js";
-import { deliveryOptions,getDeliveryOption } from "../../data/deliveryOption.js";
+import { products, getProduct } from "../../data/products.js";
+import {
+  deliveryOptions,
+  getDeliveryOption,
+} from "../../data/deliveryOption.js";
+import { renderPaymentSummary } from "./paymentSummary.js";
 import { formatCurrency } from "../utils/money.js"; //named export
 import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js"; // default export  External Libraries    dayjs()
 
@@ -12,18 +16,14 @@ import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js"; /
 export function renderOrderSummary() {
   let cartSummaryHTML = "";
 
-
   cart.forEach((cartItem) => {
-
     const productId = cartItem.productId;
 
-    const matchingProduct = getProduct(productId) ;
+    const matchingProduct = getProduct(productId);
 
     const deliveryOptionId = cartItem.deliveryOptionId;
 
     const deliveryOption = getDeliveryOption(deliveryOptionId);
-
-    
 
     const today = dayjs();
     const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
@@ -73,8 +73,6 @@ export function renderOrderSummary() {
             </div>
           </div>
         `;
-
-    
   });
 
   function deliveryOptionsHTML(matchingProduct, cartItem) {
@@ -114,7 +112,6 @@ export function renderOrderSummary() {
 
   document.querySelector(".order-summary").innerHTML = cartSummaryHTML;
 
-
   document.querySelectorAll(".js-delete-button").forEach((deleteButton) => {
     deleteButton.addEventListener("click", () => {
       const productId = deleteButton.dataset.productId;
@@ -123,6 +120,7 @@ export function renderOrderSummary() {
         `.js-cart-item-container-${productId}`
       );
       container.remove();
+      renderPaymentSummary();
     });
   });
 
@@ -142,9 +140,9 @@ export function renderOrderSummary() {
       const { productId, deliveryOptionId } = element.dataset;
       updateDeliveryOption(productId, deliveryOptionId);
       renderOrderSummary();
+      renderPaymentSummary();
     });
   });
 }
-
 
 renderOrderSummary();
