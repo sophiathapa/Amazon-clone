@@ -1,7 +1,7 @@
 import { formatCurrency } from "../scripts/utils/money.js";
 
 console.log('Test suite : formatCurrency')
-console.log('converts cens into dollars');
+console.log('converts cents into dollars');
 //Automated Test
 //types of Test Cases
 // 1) Basic test case
