@@ -22,6 +22,27 @@ class Product {
   getPrice() {
     return `$${formatCurrency(this.priceCents)}`;
   }
+
+  extraInfoHTML() {
+    return "";
+  }
+}
+
+//Inheritance = helps to share code in class
+class Clothing extends Product {
+  sizeChartLink;
+
+  constructor(productDetails) {
+    super(productDetails); //imports parents class constructor and properties
+    this.sizeChartLink = productDetails.sizeChartLink;
+  }
+
+  extraInfoHTML() {
+    //method overriding
+    // super.extraInfoHTML();
+    return `
+    <a href = '${this.sizeChartLink}' target ='_blank'>Size chart </a>`;
+  }
 }
 
 // const product1 = new Product({
@@ -519,5 +540,6 @@ export const products = [
     keywords: ["sweaters", "hoodies", "apparel", "mens"],
   },
 ].map((productDetails) => {
-  return new Product(productDetails);
+  if (productDetails.type === "clothing") return new Clothing(productDetails);
+  else return new Product(productDetails);
 });
