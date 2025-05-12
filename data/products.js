@@ -57,6 +57,37 @@ class Clothing extends Product {
 //     keywords: ["socks", "sports", "apparel"],
 //   });
 
+// //in built class
+// const date = new Date();
+// console.log(date);
+// console.log(date.toLocaleTimeString());
+
+
+// console.log(this);   //undefined
+
+// const object2 = {
+//   a :2,
+//   b: this.a    //undefined
+// }
+
+
+// function logThis () {
+//   console.log(this);
+// }
+
+// logThis();
+// logThis.call('hello');    //hello
+
+
+// const object3 = {
+//   method :()=>{
+//     console.log(this);
+//   }
+// }
+
+
+
+
 export function getProduct(productId) {
   let matchingProduct;
 
